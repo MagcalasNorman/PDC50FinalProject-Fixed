@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PDC50FinalProject.View.StudentDetailsPage"
+             Title="StudentDetailsPage">
+    <ScrollView>
+        <VerticalStackLayout Padding="20">
+            <Label Text="Student Details" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+            <Label Text="Name:" FontAttributes="Bold"/>
+            <Label Text="{Binding Name}" />
+
+            <Label Text="Gender:" FontAttributes="Bold"/>
+            <Label Text="{Binding Gender}" />
+
+            <Label Text="Contact No:" FontAttributes="Bold"/>
+            <Label Text="{Binding ContactNo}" />
+
+            <Label Text="Email:" FontAttributes="Bold"/>
+            <Label Text="{Binding Email}" />
+
+            <Label Text="Course:" FontAttributes="Bold"/>
+            <Label Text="{Binding Course}" />
+
+            <Label Text="Grade Level:" FontAttributes="Bold"/>
+            <Label Text="{Binding GradeLevel}" />
+
+            <Label Text="Attendance Records:" FontAttributes="Bold"/>
+            <Label Text="{Binding AttendanceRecords}" />
+
+            <Button Text="Edit Details"
+                    Clicked="OnEditButtonClicked"/>
+
+            <Button Text="Go Back to Student List"
+                    Clicked="OnGoBackButtonClicked"/>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
