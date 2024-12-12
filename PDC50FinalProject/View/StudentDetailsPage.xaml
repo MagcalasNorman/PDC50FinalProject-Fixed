@@ -22,11 +22,26 @@
             <Label Text="Course:" FontAttributes="Bold"/>
             <Label Text="{Binding Course}" />
 
-            <Label Text="Grade Level:" FontAttributes="Bold"/>
-            <Label Text="{Binding GradeLevel}" />
+            <Label Text="Year Level:" FontAttributes="Bold"/>
+            <Label Text="{Binding YearLevel}" />
 
             <Label Text="Attendance Records:" FontAttributes="Bold"/>
             <Label Text="{Binding AttendanceRecords}" />
+
+            <!--<CollectionView ItemsSource="{Binding AcademicHistory}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding Course}" FontAttributes="Bold"/>
+                                <Label Text=" | "/>
+                                <Label Text="{Binding YearLevel}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView> -->
+
 
             <Button Text="Edit Details"
                     Clicked="OnEditButtonClicked"/>

@@ -7,6 +7,7 @@ using PDC50FinalProject.Model;
 using PDC50FinalProject.Services;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace PDC50FinalProject.ViewModel
 {
@@ -20,10 +21,22 @@ namespace PDC50FinalProject.ViewModel
             "BSIT", "BSCS", "BMMA"
         };
 
-        public ObservableCollection<string> GradeLevels { get; } = new ObservableCollection<string>
+        public ObservableCollection<string> YearLevels { get; } = new ObservableCollection<string>
         {
             "1st Year", "2nd Year", "3rd Year", "4th Year"
         };
+
+        private ObservableCollection<AcademicHistory> _academicHistory;
+        public ObservableCollection<AcademicHistory> AcademicHistory
+        {
+            get => _academicHistory;
+            set
+            {
+                _academicHistory = value;
+                OnPropertyChanged();
+            }
+        }
+
         private Student _selectedStudent;
         public Student SelectedStudent
         {
@@ -35,6 +48,7 @@ namespace PDC50FinalProject.ViewModel
                 UpdateEntryField();
             }
         }
+
         private string _selectedCourse;
         public string SelectedCourse
         {
@@ -47,14 +61,14 @@ namespace PDC50FinalProject.ViewModel
             }
         }
 
-        private string _selectedGradeLevel;
-        public string SelectedGradeLevel
+        private string _selectedYearLevel;
+        public string SelectedYearLevel
         {
-            get => _selectedGradeLevel;
+            get => _selectedYearLevel;
             set
             {
-                _selectedGradeLevel = value;
-                GradeInput = value; 
+                _selectedYearLevel = value;
+                YearInput = value;
                 OnPropertyChanged();
             }
         }
@@ -70,13 +84,13 @@ namespace PDC50FinalProject.ViewModel
             }
         }
 
-        private string _selectedGradeLevelFilter;
-        public string SelectedGradeLevelFilter
+        private string _selectedYearLevelFilter;
+        public string SelectedYearLevelFilter
         {
-            get => _selectedGradeLevelFilter;
+            get => _selectedYearLevelFilter;
             set
             {
-                _selectedGradeLevelFilter = value;
+                _selectedYearLevelFilter = value;
                 OnPropertyChanged();
             }
         }
@@ -113,6 +127,7 @@ namespace PDC50FinalProject.ViewModel
                 OnPropertyChanged();
             }
         }
+
         private string _emailInput;
         public string EmailInput
         {
@@ -135,13 +150,13 @@ namespace PDC50FinalProject.ViewModel
             }
         }
 
-        private string _gradeInput;
-        public string GradeInput
+        private string _yearInput;
+        public string YearInput
         {
-            get => _gradeInput;
+            get => _yearInput;
             set
             {
-                _gradeInput = value;
+                _yearInput = value;
                 OnPropertyChanged();
             }
         }
@@ -156,6 +171,7 @@ namespace PDC50FinalProject.ViewModel
                 OnPropertyChanged();
             }
         }
+
         private void ClearInput()
         {
             NameInput = string.Empty;
@@ -164,50 +180,47 @@ namespace PDC50FinalProject.ViewModel
             EmailInput = string.Empty;
             AttendanceInput = string.Empty;
             CourseInput = string.Empty;
-            GradeInput = string.Empty;
-
+            YearInput = string.Empty;
         }
+
         private void UpdateEntryField()
         {
-            if (SelectedStudent != null)
-            {
-                NameInput = SelectedStudent.Name;
-                GenderInput = SelectedStudent.Gender;
-                ContactNoInput = SelectedStudent.ContactNo;
-                EmailInput = SelectedStudent.Email;
-                AttendanceInput = SelectedStudent.AttendanceRecords;
-
-                SelectedCourse = SelectedStudent.Course;
-                SelectedGradeLevel = SelectedStudent.GradeLevel;
-            }
-            else
+            if (SelectedStudent == null)
             {
                 ClearInput();
+                return;
             }
+
+            NameInput = SelectedStudent.Name;
+            GenderInput = SelectedStudent.Gender;
+            ContactNoInput = SelectedStudent.ContactNo;
+            EmailInput = SelectedStudent.Email;
+            CourseInput = SelectedStudent.Course;
+            YearInput = SelectedStudent.YearLevel;
         }
+
         public StudentViewModel()
         {
             _studentService = new StudentService();
             Students = new ObservableCollection<Student>();
+            FilteredStudents = new ObservableCollection<Student>(Students);
             LoadStudentCommand = new Command(async () => await LoadStudents());
             AddStudentCommand = new Command(async () => await AddStudents());
             UpdateStudentCommand = new Command(async () => await UpdateStudents());
             DeleteStudentCommand = new Command(async () => await DeleteStudents());
+            //LoadAcademicHistoryCommand = new Command(async () => await LoadAcademicHistoryAsync());
             FilterStudentsCommand = new Command(FilterStudents);
             ClearFilterCommand = new Command(ClearFilters);
-
-            Courses = new ObservableCollection<string> { "BSIT", "BSCS", "BMMA" };
-            GradeLevels = new ObservableCollection<string> { "1st Year", "2nd Year", "3rd Year", "4th Year" };
-            FilteredStudents = new ObservableCollection<Student> (Students);
         }
 
-
-       public ICommand LoadStudentCommand { get; }
+        public ICommand LoadStudentCommand { get; }
         public ICommand AddStudentCommand { get; }
         public ICommand UpdateStudentCommand { get; }
         public ICommand DeleteStudentCommand { get; }
         public ICommand FilterStudentsCommand { get; }
         public ICommand ClearFilterCommand { get; }
+        //public ICommand LoadAcademicHistoryCommand { get; }
+
         private async Task LoadStudents()
         {
             Students.Clear();
@@ -218,66 +231,80 @@ namespace PDC50FinalProject.ViewModel
             {
                 Students.Add(student);
                 FilteredStudents.Add(student);
-                ClearInput();
             }
+            ClearInput();
         }
 
         private async Task AddStudents()
         {
-            // Check if all required inputs are provided
-            if (!string.IsNullOrWhiteSpace(NameInput) &&
-                !string.IsNullOrWhiteSpace(GenderInput) &&
-                !string.IsNullOrWhiteSpace(ContactNoInput) &&
-                !string.IsNullOrWhiteSpace(EmailInput) &&
-                //!!string.IsNullOrWhiteSpace(CourseInput) &&
-                //!string.IsNullOrWhiteSpace(GradeInput) &&
-                !string.IsNullOrWhiteSpace(AttendanceInput))
+            if (!ValidateInputs()) return;
+
+            var newStudent = new Student
             {
-                // Create a new student object
-                var newStudent = new Student
-                {
-                    Name = NameInput,
-                    Gender = GenderInput,
-                    ContactNo = ContactNoInput,
-                    Email = EmailInput,
-                    //Course = CourseInput,
-                    //GradeLevel = GradeInput,
-                    AttendanceRecords = AttendanceInput
-                };
+                Name = NameInput,
+                Gender = GenderInput,
+                ContactNo = ContactNoInput,
+                Email = EmailInput,
+                AttendanceRecords = AttendanceInput,
+                Course = CourseInput,
+                YearLevel = YearInput
+            };
 
-                var result = await _studentService.AddStudentsAsync(newStudent);
-                if (result.Equals("Success", StringComparison.OrdinalIgnoreCase))
-                {
-                    await LoadStudents();
-                    ClearInput();
-                }
-
-            }
-        }
-
-        private async Task UpdateStudents()
-        {
-            if (SelectedStudent != null)
+            var result = await _studentService.AddStudentsAsync(newStudent);
+            if (result.Equals("Success", StringComparison.OrdinalIgnoreCase))
             {
-                SelectedStudent.Name = NameInput;
-                SelectedStudent.Gender = GenderInput;
-                SelectedStudent.ContactNo = ContactNoInput;
-                SelectedStudent.Email = EmailInput;
-                SelectedStudent.Course = CourseInput;
-                SelectedStudent.GradeLevel = GradeInput;
-                SelectedStudent.AttendanceRecords = AttendanceInput;
-
-                var result = await _studentService.UpdateStudentsAsync(SelectedStudent);
                 await LoadStudents();
                 ClearInput();
             }
         }
 
+        private async Task UpdateStudents()
+        {
+            if (SelectedStudent == null || !ValidateInputs()) return;
+
+            // Ensure AcademicHistory is initialized
+            if (SelectedStudent.AcademicHistory == null)
+            {
+                SelectedStudent.AcademicHistory = new List<AcademicHistory>();
+            }
+
+            var previousCourse = SelectedStudent.Course;
+            var previousYearLevel = SelectedStudent.YearLevel;
+
+            SelectedStudent.Name = NameInput;
+            SelectedStudent.Gender = GenderInput;
+            SelectedStudent.ContactNo = ContactNoInput;
+            SelectedStudent.Email = EmailInput;
+            SelectedStudent.Course = CourseInput;
+            SelectedStudent.YearLevel = YearInput;
+
+            // Check if the course or year level has changed
+            if (previousCourse != CourseInput || previousYearLevel != YearInput)
+            {
+                // Add old course and year to AcademicHistory
+                SelectedStudent.AcademicHistory.Add(new AcademicHistory
+                {
+                    Course = previousCourse,
+                    yearLevel = previousYearLevel
+                });
+            }
+
+            var result = await _studentService.UpdateStudentsAsync(SelectedStudent);
+            if (result.Equals("Success", StringComparison.OrdinalIgnoreCase))
+            {
+                await LoadStudents();
+                ClearInput();
+            }
+        }
+
+
         private async Task DeleteStudents()
         {
-            if (SelectedStudent != null)
+            if (SelectedStudent == null) return;
+
+            var result = await _studentService.DeleteUsersAsync(SelectedStudent.ID);
+            if (result.Equals("Success", StringComparison.OrdinalIgnoreCase))
             {
-                var result = await _studentService.DeleteUsersAsync(SelectedStudent.ID);
                 await LoadStudents();
                 ClearInput();
             }
@@ -287,18 +314,8 @@ namespace PDC50FinalProject.ViewModel
         {
             var filtered = Students.AsEnumerable();
 
-            if (!string.IsNullOrWhiteSpace(SelectedCourseFilter))
-            {
-                filtered = filtered.Where(s => s.Course == SelectedCourseFilter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(SelectedGradeLevelFilter))
-            {
-                filtered = filtered.Where(s => s.GradeLevel== SelectedGradeLevelFilter);
-            }
-
             FilteredStudents.Clear();
-            foreach(var student in filtered)
+            foreach (var student in filtered)
             {
                 FilteredStudents.Add(student);
             }
@@ -307,13 +324,40 @@ namespace PDC50FinalProject.ViewModel
         private void ClearFilters()
         {
             SelectedCourseFilter = null;
-            SelectedGradeLevelFilter = null;
+            SelectedYearLevelFilter = null;
 
             FilteredStudents.Clear();
-            foreach(var student in Students)
+            foreach (var student in Students)
             {
                 FilteredStudents.Add(student);
             }
         }
+
+        private bool ValidateInputs()
+        {
+            if (string.IsNullOrWhiteSpace(NameInput) || string.IsNullOrWhiteSpace(GenderInput) ||
+                string.IsNullOrWhiteSpace(ContactNoInput) || string.IsNullOrWhiteSpace(EmailInput) ||
+                string.IsNullOrWhiteSpace(CourseInput) || string.IsNullOrWhiteSpace(YearInput))
+            {
+                App.Current.MainPage.DisplayAlert("Error", "Please fill in all fields.", "OK");
+                return false;
+            }
+            return true;
+        }
+
+        //private async Task LoadAcademicHistoryAsync()
+        //{
+        //    if (SelectedStudent == null) return;
+
+        //    try
+        //    {
+        //        var history = await _studentService.GetAcademicHistoryAsync(SelectedStudent.ID);
+        //        AcademicHistory = new ObservableCollection<AcademicHistory>(history);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error loading academic history: {ex.Message}");
+        //    }
+        //}
     }
 }

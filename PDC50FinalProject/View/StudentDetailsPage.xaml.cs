@@ -23,4 +23,14 @@ public partial class StudentDetailsPage : ContentPage
             
         }
     }
+
+    //protected override async void OnAppearing()
+    //{
+    //    base.OnAppearing();
+
+    //    if (BindingContext is StudentViewModel viewModel)
+    //    {
+    //        viewModel.LoadAcademicHistoryCommand.Execute(null);
+    //    }
+    //}
 }

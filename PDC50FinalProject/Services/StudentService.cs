@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using PDC50FinalProject.Model;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace PDC50FinalProject.Services
 {
@@ -28,8 +30,7 @@ namespace PDC50FinalProject.Services
         //Add user
         public async Task<string> AddStudentsAsync(Student student)
         {
-            var response =
-                await _httpClient.PostAsJsonAsync($"{BaseUrl}add_user.php", student);
+            var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}add_user.php", student);
             var result = await response.Content.ReadAsStringAsync();
             return result;
         }
@@ -37,8 +38,7 @@ namespace PDC50FinalProject.Services
         //Update User
         public async Task<string> UpdateStudentsAsync(Student student)
         {
-            var response =
-                await _httpClient.PostAsJsonAsync($"{BaseUrl}update_user.php", student);
+            var response = await _httpClient.PostAsJsonAsync($"{BaseUrl}update_user.php", student);
             var result = await response.Content.ReadAsStringAsync();
             return result;
         }
@@ -52,8 +52,23 @@ namespace PDC50FinalProject.Services
             return result;
         }
 
+        //public async Task<List<AcademicHistory>> GetAcademicHistoryAsync(int studentId)
+        //{
+        //    var url = $"{BaseUrl}/get_academic_history.php"; // Ensure BaseUrl is defined in your service
+        //    var payload = JsonConvert.SerializeObject(new { studentId });
+
+        //    var response = await _httpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json"));
+
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var json = await response.Content.ReadAsStringAsync();
+        //        return JsonConvert.DeserializeObject<List<AcademicHistory>>(json) ?? new List<AcademicHistory>();
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("Failed to fetch academic history.");
+        //    }
+        //}
 
     }
-
-
 }

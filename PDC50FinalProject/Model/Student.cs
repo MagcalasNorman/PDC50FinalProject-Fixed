@@ -14,8 +14,10 @@ namespace PDC50FinalProject.Model
         public string ContactNo { get; set; }
         public string Email { get; set; }
         public string AttendanceRecords { get; set; }
-        public string Course { get; set; } 
-        public string GradeLevel { get; set; }
+        public string Course { get; set; }
+        public string YearLevel { get; set; }
+
+        public List<AcademicHistory> AcademicHistory { get; set; } = new List<AcademicHistory>();
 
     }
 }

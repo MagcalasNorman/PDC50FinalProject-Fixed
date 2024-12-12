@@ -2,57 +2,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PDC50FinalProject.View.StudentList"
-             Title="StudentList">
+             Title="Student List">
     <ScrollView>
-        <VerticalStackLayout>
-            <Label Text="Filter Students"
-                   FontSize="Medium"
-                   FontAttributes="Bold"/>
-            
+        <VerticalStackLayout Padding="10">
+            <!-- Filter Section -->
+            <Label Text="Filter Students" FontSize="Medium" FontAttributes="Bold"/>
+
             <Picker Title="Select Course"
                     ItemsSource="{Binding Courses}"
                     SelectedItem="{Binding SelectedCourseFilter}"/>
-            
-            <Picker Title="Select Grade Level"
-                    ItemsSource="{Binding GradeLevels}"
-                    SelectedItem="{Binding SelectedGradeLevelFilter}"/>
-            
-            <Button Text="Apply Filters"
-                    Command="{Binding FilterStudentsCommand}"/>
-            
-            <Label Text=""/>
 
-            <Button Text="Clear Filters"
-                    Command="{Binding ClearFilterCommand}"/>
-            
-            <Label Text=""/>
+            <Picker Title="Select Year Level"
+                    ItemsSource="{Binding YearLevels}"
+                    SelectedItem="{Binding SelectedYearLevelFilter}"/>
 
-            <Button Text="Refresh List"
-                    Command="{Binding LoadStudentCommand}"/> 
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Apply Filters" Command="{Binding FilterStudentsCommand}"/>
+                <Button Text="Clear Filters" Command="{Binding ClearFilterCommand}"/>
+                <Button Text="Refresh List" Command="{Binding LoadStudentCommand}"/>
+            </HorizontalStackLayout>
 
-            <ListView ItemsSource="{Binding FilteredStudents}" SelectedItem="{Binding SelectedStudent}" ItemTapped="OnItemTapped">
+            <!-- Student List -->
+            <ListView ItemsSource="{Binding FilteredStudents}"
+                      SelectedItem="{Binding SelectedStudent}"
+                      ItemTapped="OnItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal"
-                                         Padding="10"
-                                         >
+                            <StackLayout Orientation="Horizontal" Padding="10">
                                 <Label Text="{Binding Name}" FontAttributes="Bold"/>
-                                <Label Text=" | "/>
-                                <Label Text="{Binding StudentID, StringFormat='ID Number: {0}'}"/>
                                 <Label Text=" | "/>
                                 <Label Text="{Binding Email}"/>
                                 <Label Text=" | "/>
-                                <Label Text="{Binding ContactNo}"/>
-
+                                <Label Text="{Binding Course}"/>
+                                <Label Text=" | "/>
+                                <Label Text="{Binding YearLevel}"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <StackLayout Padding="10"/>
-            <Label Text="Add/Delete Student" FontSize="Medium" FontAttributes="Bold"/>
+            <!-- Add/Delete/Update Section -->
+            <Label Text="Add/Delete/Update Student" FontSize="Medium" FontAttributes="Bold"/>
+
             <Label Text="Name"/>
             <Entry Placeholder="Enter Name" Text="{Binding NameInput}"/>
 
@@ -65,28 +58,24 @@
             <Label Text="Contact No."/>
             <Entry Placeholder="Enter Contact No." Text="{Binding ContactNoInput}"/>
 
-            <!--<Label Text="Course"/>
-            <Picker ItemsSource="{Binding Courses}"
-                    SelectedItem="{Binding SelectedCourse}"
-                    Title="Select a Course"/>
-            
-            <Label Text="Grade Level"/>
-            <Picker ItemsSource="{Binding GradeLevels}"
-                    SelectedItem="{Binding SelectedGradeLevel}"
-                    Title="Select a Course"/> -->
-            
+            <Label Text="Course"/>
+            <Picker Title="Select Course"
+                    ItemsSource="{Binding Courses}"
+                    SelectedItem="{Binding CourseInput}"/>
+
+            <Label Text="Year Level"/>
+            <Picker Title="Select Year Level"
+                    ItemsSource="{Binding YearLevels}"
+                    SelectedItem="{Binding YearInput}"/>
+
             <Label Text="Attendance Records"/>
             <Entry Placeholder="Enter Attendance Records" Text="{Binding AttendanceInput}"/>
 
-            <Button Text="Add User"
-                    Command="{Binding AddStudentCommand}"/>
-
-            <Button Text="Update"
-                    Command="{Binding UpdateStudentCommand}"/>
-
-            <Button Text="Delete"
-                    Command="{Binding DeleteStudentCommand}"/>
-
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Add" Command="{Binding AddStudentCommand}"/>
+                <Button Text="Update" Command="{Binding UpdateStudentCommand}"/>
+                <Button Text="Delete" Command="{Binding DeleteStudentCommand}"/>
+            </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
