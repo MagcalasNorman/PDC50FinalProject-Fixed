@@ -10,9 +10,6 @@
             <Button Text="View Students"
                     Clicked="ClickedViewStudent"/>
             
-            
-            <Button Text="View History"
-                    Clicked="ClickedViewHistory"/>
         </VerticalStackLayout>
     </ScrollView>
 

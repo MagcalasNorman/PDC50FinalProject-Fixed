@@ -13,10 +13,7 @@
             await Shell.Current.GoToAsync("//StudentList");
         }
 
-        private async void ClickedViewHistory(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync("//AcademicHistoryView");
-        }
+
     }
 
 }
