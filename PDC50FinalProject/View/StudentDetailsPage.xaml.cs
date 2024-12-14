@@ -1,7 +1,6 @@
 using PDC50FinalProject.Model;
 using PDC50FinalProject.ViewModel;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace PDC50FinalProject.View;
 
@@ -29,26 +28,17 @@ public partial class StudentDetailsPage : ContentPage
         {
             // Explicitly await LoadAcademicHistoryAsync to ensure data is loaded before the UI is shown
             await viewModel.LoadAcademicHistoryAsync();
-
-            // Debug check to ensure data has been loaded
-            Debug.WriteLine($"AcademicHistory count in OnAppearing: {viewModel.SelectedStudent.AcademicHistory.Count}");
         }
     }
 
     private async void LoadAcademicHistory()
     {
-        try
-        {
+      
             if (BindingContext is StudentViewModel viewModel)
             {
                 // Use the ViewModel to load academic history for the selected student
                 await viewModel.LoadAcademicHistoryAsync(); // Call without the student argument
             }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Failed to load academic history: {ex.Message}");
-        }
     }
 
     private async void OnGoBackButtonClicked(object sender, EventArgs e)
