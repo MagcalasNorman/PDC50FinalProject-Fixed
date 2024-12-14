@@ -1,15 +1,69 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PDC50FinalProject.MainPage">
+             x:Class="PDC50FinalProject.MainPage"
+             BackgroundColor="White">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
-            <Button Text="View Students"
-                    Clicked="ClickedViewStudent"/>
-            
+        <VerticalStackLayout Padding="30,0" Spacing="25" HorizontalOptions="Center">
+            <!-- Line break -->
+            <BoxView HeightRequest="20" BackgroundColor="Transparent" />
+            <!-- Line break -->
+            <BoxView HeightRequest="20" BackgroundColor="Transparent" />
+            <!-- Line break -->
+            <BoxView HeightRequest="20" BackgroundColor="Transparent" />
+            <!-- Line break -->
+            <BoxView HeightRequest="20" BackgroundColor="Transparent" />
+            <!-- Line break -->
+            <!-- Title -->
+            <Label Text="CCS StudentHub"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="Red"
+                   HorizontalOptions="Center" />
+
+            <!-- Username Entry -->
+            <Entry x:Name="UsernameEntry"
+                   Placeholder="Enter your username"
+                   Keyboard="Text"
+                   Margin="0,10"
+                   BackgroundColor="#f0f0f0"
+                   HeightRequest="50"
+                   TextColor="Black"
+                   WidthRequest="500" />
+            <!-- Long entry field -->
+
+            <!-- Password Entry -->
+            <Entry x:Name="PasswordEntry"
+                   Placeholder="Enter your password"
+                   IsPassword="True"
+                   Margin="0,10"
+                   BackgroundColor="#f0f0f0"
+                   HeightRequest="50"
+                   TextColor="Black"
+                   WidthRequest="500" />
+            <!-- Long entry field -->
+            <!-- Creates space between elements -->
+
+            <!-- Buttons side by side -->
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Login"
+                        BackgroundColor="Gray"
+                        TextColor="White"
+                        HeightRequest="50"
+                        WidthRequest="250"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnLoginClicked" />
+
+                <Button Text="Create Account"
+                        BackgroundColor="LightGray"
+                        TextColor="Black"
+                        HeightRequest="50"
+                        WidthRequest="250"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnCreateAccountClicked" />
+            </HorizontalStackLayout>
+
         </VerticalStackLayout>
     </ScrollView>
 

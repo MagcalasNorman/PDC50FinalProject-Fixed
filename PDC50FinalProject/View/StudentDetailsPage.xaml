@@ -8,26 +8,25 @@
             <Label Text="Student Details" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center"/>
 
             <Label Text="Name:" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.Name}" />
+            <Entry Text="{Binding SelectedStudent.Name}" />
 
             <Label Text="Gender:" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.Gender}" />
+            <Entry Text="{Binding SelectedStudent.Gender}" />
 
             <Label Text="Contact No:" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.ContactNo}" />
+            <Entry Text="{Binding SelectedStudent.ContactNo}" />
 
             <Label Text="Email:" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.Email}" />
+            <Entry Text="{Binding SelectedStudent.Email}" />
 
             <Label Text="Course:" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.Course}" />
+            <Entry Text="{Binding SelectedStudent.Course}" />
 
             <Label Text="Year Level (Student):" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.YearLevel}" />
-            <!-- This binds to the Student's YearLevel -->
+            <Entry Text="{Binding SelectedStudent.YearLevel}" />
 
             <Label Text="Attendance Records:" FontAttributes="Bold"/>
-            <Label Text="{Binding SelectedStudent.AttendanceRecords}" />
+            <Editor Text="{Binding SelectedStudent.AttendanceRecords}" HeightRequest="100"/>
 
             <Label Text="Academic History" FontAttributes="Bold" FontSize="15"/>
 
@@ -37,15 +36,18 @@
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="Year Level: " FontAttributes="Bold"/>
-                                <Label Text="{Binding yearLevel}" />
+                                <Entry Text="{Binding yearLevel}" />
                                 <Label Text="|"/>
                                 <Label Text="Course: " FontAttributes="Bold"/>
-                                <Label Text="{Binding Course}" />
+                                <Entry Text="{Binding Course}" />
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+
+            <!-- Save Changes Button -->
+            <Button Text="Save Changes" Command="{Binding UpdateStudentCommand}"/>
 
             <Button Text="Go Back to Student List" Clicked="OnGoBackButtonClicked"/>
         </VerticalStackLayout>

@@ -1,80 +1,182 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PDC50FinalProject.View.StudentList"
-             Title="Student List">
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 x:Class="PDC50FinalProject.View.StudentList"
+                 BackgroundColor="White">
+
     <ScrollView>
-        <VerticalStackLayout Padding="10">
+        <VerticalStackLayout Padding="30,0" Spacing="25">
+
+            <!-- Teacher's Name (SirFer) on the upper left -->
+            <Label Text="SirFer"
+                       FontSize="48"
+                       FontAttributes="Bold"
+                       TextColor="Red"
+                       HorizontalOptions="Start" />
+
+            <!-- Line Divider -->
+            <BoxView HeightRequest="0.5" BackgroundColor="Gray" Margin="0,10" />
+
             <!-- Filter Section -->
-            <Label Text="Filter Students" FontSize="Medium" FontAttributes="Bold"/>
+            <Label Text="Filter Students" 
+                       FontSize="Medium" 
+                       FontAttributes="Bold" 
+                       TextColor="Black" />
 
-            <Picker Title="Select Course"
-                    ItemsSource="{Binding Courses}"
-                    SelectedItem="{Binding SelectedCourseFilter}"/>
-
-            <Picker Title="Select Year Level"
-                    ItemsSource="{Binding YearLevels}"
-                    SelectedItem="{Binding SelectedYearLevelFilter}"/>
-
+            <!-- Use HorizontalStackLayout to place Course and Year Level side by side -->
             <HorizontalStackLayout Spacing="10">
-                <Button Text="Apply Filters" Command="{Binding FilterStudentsCommand}"/>
-                <Button Text="Clear Filters" Command="{Binding ClearFilterCommand}"/>
-                <Button Text="Refresh List" Command="{Binding LoadStudentCommand}"/>
+                <Picker Title="Select Course"
+                            ItemsSource="{Binding Courses}"
+                            SelectedItem="{Binding SelectedCourseFilter}"
+                            WidthRequest="750"
+                            BackgroundColor="LightGray"
+                            TextColor="Black" />
+
+                <Picker Title="Select Year Level"
+                            ItemsSource="{Binding YearLevels}"
+                            SelectedItem="{Binding SelectedYearLevelFilter}"
+                            BackgroundColor="LightGray"
+                            WidthRequest="750"
+                            TextColor="Black"/>
+
             </HorizontalStackLayout>
 
-            <!-- Student List -->
-            <ListView ItemsSource="{Binding FilteredStudents}"
-                      SelectedItem="{Binding SelectedStudent}"
-                      ItemTapped="OnItemTapped">
+            <!-- Apply Filters and Clear Filters Buttons -->
+            <HorizontalStackLayout Spacing="15" Padding="10" HorizontalOptions="Center">
+                <Button Text="Apply Filters" 
+                Command="{Binding FilterStudentsCommand}" 
+                BackgroundColor="SlateBlue" 
+                TextColor="White" 
+                CornerRadius="5"/>
+                <Button Text="Clear Filters" 
+                Command="{Binding ClearFilterCommand}" 
+                BackgroundColor="Tomato" 
+                TextColor="White" 
+                CornerRadius="5"/>
+            </HorizontalStackLayout>
+
+
+            <!-- Line Divider -->
+            <BoxView HeightRequest="0.5" BackgroundColor="Gray" Margin="0,10" />
+
+            <!-- Student List Section -->
+            <Label Text="Student List" 
+       FontSize="Medium" 
+       FontAttributes="Bold" 
+       TextColor="Black" />
+
+
+            <!-- Add Create Button to navigate to the Add Student page -->
+            <Button Text="Create New Student"
+        Command="{Binding NavigateToCreateStudentCommand}"
+        BackgroundColor="MediumSeaGreen"
+        TextColor="White"
+        CornerRadius="5" 
+        HorizontalOptions="Center" 
+        VerticalOptions="Start" />
+
+
+            <ListView ItemsSource="{Binding FilteredStudents}" 
+          SelectedItem="{Binding SelectedStudent}" 
+          ItemTapped="OnItemTapped" 
+          SeparatorVisibility="Default">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="{Binding Name}" FontAttributes="Bold"/>
-                                <Label Text=" | "/>
-                                <Label Text="{Binding Email}"/>
-                                <Label Text=" | "/>
-                                <Label Text="{Binding Course}"/>
-                                <Label Text=" | "/>
-                                <Label Text="{Binding YearLevel}"/>
-                            </StackLayout>
+                            <Grid Padding="10" ColumnSpacing="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Column Definitions -->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Name -->
+                                <Label Text="{Binding Name}" 
+                           FontAttributes="Bold" 
+                           TextColor="Black" 
+                           Grid.Column="0" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" />
+
+                                <!-- Email -->
+                                <Label Text="{Binding Email}" 
+                           TextColor="Black" 
+                           Grid.Column="1" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" />
+
+                                <!-- Course -->
+                                <Label Text="{Binding Course}" 
+                           TextColor="Black" 
+                           Grid.Column="2" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" />
+
+                                <!-- Year Level -->
+                                <Label Text="{Binding YearLevel}" 
+                           TextColor="Black" 
+                           Grid.Column="3" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" />
+                            </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
+
+            <!-- Line Divider -->
+            <BoxView HeightRequest="0.5" BackgroundColor="Gray" Margin="0,10" />
+
             <!-- Add/Delete/Update Section -->
-            <Label Text="Add/Delete/Update Student" FontSize="Medium" FontAttributes="Bold"/>
+            <Label Text="Add/Delete/Update Student" 
+                       FontSize="Medium" 
+                       FontAttributes="Bold" 
+                       TextColor="MidnightBlue"/>
 
-            <Label Text="Name"/>
-            <Entry Placeholder="Enter Name" Text="{Binding NameInput}"/>
+            <Label Text="Name" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Name" Text="{Binding NameInput}" BackgroundColor="LightGray" />
 
-            <Label Text="Gender"/>
-            <Entry Placeholder="Enter Gender" Text="{Binding GenderInput}"/>
+            <Label Text="Gender" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Gender" Text="{Binding GenderInput}" BackgroundColor="LightGray" />
 
-            <Label Text="Email"/>
-            <Entry Placeholder="Enter Email" Text="{Binding EmailInput}"/>
+            <Label Text="Email" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Email" Text="{Binding EmailInput}" BackgroundColor="LightGray" />
 
-            <Label Text="Contact No."/>
-            <Entry Placeholder="Enter Contact No." Text="{Binding ContactNoInput}"/>
+            <Label Text="Contact No." TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Contact No." Text="{Binding ContactNoInput}" BackgroundColor="LightGray" />
 
-            <Label Text="Course"/>
-            <Picker Title="Select Course"
-                    ItemsSource="{Binding Courses}"
-                    SelectedItem="{Binding CourseInput}"/>
+            <!-- Course and Year Level side by side -->
+            <HorizontalStackLayout Spacing="15">
+                <Label Text="Course" TextColor="DarkSlateGray" />
+                <Picker Title="Select Course"
+                            ItemsSource="{Binding Courses}"
+                            SelectedItem="{Binding CourseInput}"
+                            BackgroundColor="LightGray"
+                            TextColor="Black" />
 
-            <Label Text="Year Level"/>
-            <Picker Title="Select Year Level"
-                    ItemsSource="{Binding YearLevels}"
-                    SelectedItem="{Binding YearInput}"/>
+                <Label Text="Year Level" TextColor="DarkSlateGray" />
+                <Picker Title="Select Year Level"
+                            ItemsSource="{Binding YearLevels}"
+                            SelectedItem="{Binding YearInput}"
+                            BackgroundColor="LightGray"
+                            TextColor="Black" />
+            </HorizontalStackLayout>
 
-            <Label Text="Attendance Records"/>
-            <Entry Placeholder="Enter Attendance Records" Text="{Binding AttendanceInput}"/>
+            <Label Text="Attendance Records" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Attendance Records" Text="{Binding AttendanceInput}" BackgroundColor="LightGray" />
 
-            <HorizontalStackLayout Spacing="10">
-                <Button Text="Add" Command="{Binding AddStudentCommand}"/>
-                <Button Text="Update" Command="{Binding UpdateStudentCommand}"/>
-                <Button Text="Delete" Command="{Binding DeleteStudentCommand}"/>
+            <!-- Buttons for Add/Update/Delete -->
+            <HorizontalStackLayout Spacing="10" Padding="10">
+                <Button Text="Add" Command="{Binding AddStudentCommand}" BackgroundColor="MediumSeaGreen" TextColor="White" CornerRadius="5"/>
+                <Button Text="Update" Command="{Binding UpdateStudentCommand}" BackgroundColor="RoyalBlue" TextColor="White" CornerRadius="5"/>
+                <Button Text="Delete" Command="{Binding DeleteStudentCommand}" BackgroundColor="Tomato" TextColor="White" CornerRadius="5"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

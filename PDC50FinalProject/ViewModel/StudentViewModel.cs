@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Newtonsoft.Json;
 
+
 namespace PDC50FinalProject.ViewModel
 {
     public class StudentViewModel : BindableObject
@@ -216,6 +217,8 @@ namespace PDC50FinalProject.ViewModel
             LoadAcademicHistoryCommand = new Command(async () => await LoadAcademicHistoryAsync());
             FilterStudentsCommand = new Command(FilterStudents);
             ClearFilterCommand = new Command(ClearFilters);
+            NavigateToCreateStudentCommand = new Command(NavigateToCreateStudent);
+
         }
 
         public ICommand LoadStudentCommand { get; }
@@ -225,6 +228,14 @@ namespace PDC50FinalProject.ViewModel
         public ICommand FilterStudentsCommand { get; }
         public ICommand ClearFilterCommand { get; }
         public ICommand LoadAcademicHistoryCommand { get; }
+        public ICommand NavigateToCreateStudentCommand { get; }
+
+        private async void NavigateToCreateStudent()
+        {
+            // Use absolute route with /// prefix
+            await Shell.Current.GoToAsync("///CreateStudentPage");
+        }
+
 
         public async Task LoadStudents()
         {
@@ -267,7 +278,7 @@ namespace PDC50FinalProject.ViewModel
         {
             if (SelectedStudent == null || !ValidateInputs()) return;
 
-            // Ensure AcademicHistory is initialized as ObservableCollection
+            // Ensure AcademicHistory is initialized
             if (SelectedStudent.AcademicHistory == null)
             {
                 SelectedStudent.AcademicHistory = new ObservableCollection<AcademicHistory>();
@@ -317,14 +328,27 @@ namespace PDC50FinalProject.ViewModel
 
         private void FilterStudents()
         {
+            // Filter the Students collection based on selected filters
             var filtered = Students.AsEnumerable();
 
+            if (!string.IsNullOrEmpty(SelectedCourseFilter))
+            {
+                filtered = filtered.Where(s => s.Course == SelectedCourseFilter);
+            }
+
+            if (!string.IsNullOrEmpty(SelectedYearLevelFilter))
+            {
+                filtered = filtered.Where(s => s.YearLevel == SelectedYearLevelFilter);
+            }
+
+            // Clear the existing FilteredStudents collection and add the filtered students
             FilteredStudents.Clear();
             foreach (var student in filtered)
             {
                 FilteredStudents.Add(student);
             }
         }
+
 
         private void ClearFilters()
         {
@@ -353,30 +377,33 @@ namespace PDC50FinalProject.ViewModel
         public async Task LoadAcademicHistoryAsync()
         {
             if (SelectedStudent == null) return;
-
-           
-
+            try
+            {
+                Debug.WriteLine($"Loading academic history for student ID: {SelectedStudent.ID}");
                 var history = await _studentService.GetAcademicHistoryAsync(SelectedStudent.ID);
-
                 // Verify if history is coming in properly
                 Debug.WriteLine($"Received academic history: {JsonConvert.SerializeObject(history)}");
-
                 // Ensure the AcademicHistory collection is initialized and populated
                 if (SelectedStudent.AcademicHistory == null)
                 {
                     SelectedStudent.AcademicHistory = new ObservableCollection<AcademicHistory>();
                 }
-
                 // Clear the collection and add new items
                 SelectedStudent.AcademicHistory.Clear();
                 foreach (var academic in history)
                 {
                     SelectedStudent.AcademicHistory.Add(academic);
                 }
-
                 // Notify that the AcademicHistory has been updated
                 OnPropertyChanged(nameof(SelectedStudent.AcademicHistory));
+                // Optionally, check count
+                Debug.WriteLine($"AcademicHistory count after update: {SelectedStudent.AcademicHistory.Count}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading academic history: {ex.Message}");
+            }
         }
-
     }
 }
+

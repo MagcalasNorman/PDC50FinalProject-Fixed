@@ -1,6 +1,7 @@
 using PDC50FinalProject.Model;
 using PDC50FinalProject.ViewModel;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace PDC50FinalProject.View;
 
@@ -9,9 +10,14 @@ public partial class StudentDetailsPage : ContentPage
     public StudentDetailsPage(Student selectedStudent)
     {
         InitializeComponent();
+        if (selectedStudent == null)
+        {
+            Debug.WriteLine("Error: Selected student is null");
+        }
+        else
 
-        // Set the BindingContext to the ViewModel and pass the selected student
-        BindingContext = new StudentViewModel
+            // Set the BindingContext to the ViewModel and pass the selected student
+            BindingContext = new StudentViewModel
         {
             SelectedStudent = selectedStudent
         };

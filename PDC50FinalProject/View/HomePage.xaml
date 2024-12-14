@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PDC50FinalProject.View.HomePage"
+             BackgroundColor="White">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,0" Spacing="25">
+
+            <!-- Teacher's Name (SirFer) on the upper left -->
+            <Label Text="SirFer"
+                   FontSize="48"
+                   FontAttributes="Bold"
+                   TextColor="Red"
+                   HorizontalOptions="Start" />
+
+            <!-- Line Divider -->
+            <BoxView HeightRequest="0.5" BackgroundColor="Gray" Margin="0,10" />
+
+            <!-- Button for 'View Students' -->
+            <Button Text="View Students"
+                    BackgroundColor="#f0f0f0"
+                    TextColor="Black"
+                    HorizontalOptions="FillAndExpand"
+                    Clicked="ClickedViewStudent" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

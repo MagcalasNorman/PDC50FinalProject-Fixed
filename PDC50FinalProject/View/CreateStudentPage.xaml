@@ -1,0 +1,49 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PDC50FinalProject.View.CreateStudentPage"
+             BackgroundColor="White">
+    <ScrollView>
+        <VerticalStackLayout Padding="10">
+            <Label Text="Add/Delete/Update Student" 
+                       FontSize="Medium" 
+                       FontAttributes="Bold" 
+                       TextColor="MidnightBlue"/>
+
+            <Label Text="Name" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Name" Text="{Binding NameInput}" BackgroundColor="LightGray" />
+
+            <Label Text="Gender" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Gender" Text="{Binding GenderInput}" BackgroundColor="LightGray" />
+
+            <Label Text="Email" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Email" Text="{Binding EmailInput}" BackgroundColor="LightGray" />
+
+            <Label Text="Contact No." TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Contact No." Text="{Binding ContactNoInput}" BackgroundColor="LightGray" />
+
+            <!-- Course and Year Level side by side -->
+            <Label Text="Course"/>
+            <Picker Title="Select Course"
+                    ItemsSource="{Binding Courses}"
+                    SelectedItem="{Binding CourseInput}"
+                    BackgroundColor="LightGray"
+                    TextColor="Black" />
+
+            <Label Text="Year Level"/>
+            <Picker Title="Select Year Level"
+                    ItemsSource="{Binding YearLevels}"
+                    SelectedItem="{Binding YearInput}"
+                    BackgroundColor="LightGray"
+                    TextColor="Black" />
+
+            <Label Text="Attendance Records" TextColor="DarkSlateGray"/>
+            <Entry Placeholder="Enter Attendance Records" Text="{Binding AttendanceInput}" BackgroundColor="LightGray" />
+
+            <!-- Buttons for Add/Update/Delete -->
+            <HorizontalStackLayout Spacing="10">
+                <Button Text="Add" Command="{Binding AddStudentCommand}"/>
+
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

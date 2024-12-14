@@ -9,15 +9,19 @@
     Title="PDC50FinalProject">
 
     <ShellContent
-        Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
     <ShellContent
-        Title="StudentList"
         ContentTemplate="{DataTemplate view:StudentList}"
         Route="StudentList" />
-
-
+    <ShellContent
+        ContentTemplate="{DataTemplate view:HomePage}"
+        Route="HomePage" />
+    <!-- Add CreateStudentPage as a new ShellContent -->
+    <ShellContent
+        ContentTemplate="{DataTemplate view:CreateStudentPage}"
+        Route="CreateStudentPage" />
 
 
 </Shell>
+

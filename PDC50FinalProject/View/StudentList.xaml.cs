@@ -1,5 +1,6 @@
 using PDC50FinalProject.Model;
 using PDC50FinalProject.ViewModel;
+using System.Diagnostics;
 
 namespace PDC50FinalProject.View;
 
@@ -25,10 +26,23 @@ public partial class StudentList : ContentPage
     // Handle the item tapped event to navigate to the StudentDetailsPage
     private async void OnItemTapped(object sender, ItemTappedEventArgs e)
     {
-        if (e.Item is Student selectedStudent)
+        try
         {
-            // Navigate to the StudentDetailsPage with the selected student
-            await Navigation.PushAsync(new StudentDetailsPage(selectedStudent));
+            if (e.Item is Student selectedStudent && selectedStudent != null)
+            {
+                await Navigation.PushAsync(new StudentDetailsPage(selectedStudent));
+            }
+            else
+            {
+                Debug.WriteLine("Selected student is invalid or null.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Exception occurred during navigation: {ex.Message}");
         }
     }
+
+
+
 }
