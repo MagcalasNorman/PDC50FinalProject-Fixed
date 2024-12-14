@@ -8,6 +8,7 @@ using PDC50FinalProject.Services;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace PDC50FinalProject.ViewModel
 {
@@ -44,6 +45,10 @@ namespace PDC50FinalProject.ViewModel
             set
             {
                 _selectedStudent = value;
+                if (_selectedStudent != null && _selectedStudent.AcademicHistory == null)
+                {
+                    _selectedStudent.AcademicHistory = new ObservableCollection<AcademicHistory>();
+                }
                 OnPropertyChanged();
                 UpdateEntryField();
             }
@@ -208,7 +213,7 @@ namespace PDC50FinalProject.ViewModel
             AddStudentCommand = new Command(async () => await AddStudents());
             UpdateStudentCommand = new Command(async () => await UpdateStudents());
             DeleteStudentCommand = new Command(async () => await DeleteStudents());
-            //LoadAcademicHistoryCommand = new Command(async () => await LoadAcademicHistoryAsync());
+            LoadAcademicHistoryCommand = new Command(async () => await LoadAcademicHistoryAsync());
             FilterStudentsCommand = new Command(FilterStudents);
             ClearFilterCommand = new Command(ClearFilters);
         }
@@ -219,9 +224,9 @@ namespace PDC50FinalProject.ViewModel
         public ICommand DeleteStudentCommand { get; }
         public ICommand FilterStudentsCommand { get; }
         public ICommand ClearFilterCommand { get; }
-        //public ICommand LoadAcademicHistoryCommand { get; }
+        public ICommand LoadAcademicHistoryCommand { get; }
 
-        private async Task LoadStudents()
+        public async Task LoadStudents()
         {
             Students.Clear();
             FilteredStudents.Clear();
@@ -262,10 +267,10 @@ namespace PDC50FinalProject.ViewModel
         {
             if (SelectedStudent == null || !ValidateInputs()) return;
 
-            // Ensure AcademicHistory is initialized
+            // Ensure AcademicHistory is initialized as ObservableCollection
             if (SelectedStudent.AcademicHistory == null)
             {
-                SelectedStudent.AcademicHistory = new List<AcademicHistory>();
+                SelectedStudent.AcademicHistory = new ObservableCollection<AcademicHistory>();
             }
 
             var previousCourse = SelectedStudent.Course;
@@ -345,19 +350,43 @@ namespace PDC50FinalProject.ViewModel
             return true;
         }
 
-        //private async Task LoadAcademicHistoryAsync()
-        //{
-        //    if (SelectedStudent == null) return;
+        public async Task LoadAcademicHistoryAsync()
+        {
+            if (SelectedStudent == null) return;
 
-        //    try
-        //    {
-        //        var history = await _studentService.GetAcademicHistoryAsync(SelectedStudent.ID);
-        //        AcademicHistory = new ObservableCollection<AcademicHistory>(history);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"Error loading academic history: {ex.Message}");
-        //    }
-        //}
+            try
+            {
+                Debug.WriteLine($"Loading academic history for student ID: {SelectedStudent.ID}");
+
+                var history = await _studentService.GetAcademicHistoryAsync(SelectedStudent.ID);
+
+                // Verify if history is coming in properly
+                Debug.WriteLine($"Received academic history: {JsonConvert.SerializeObject(history)}");
+
+                // Ensure the AcademicHistory collection is initialized and populated
+                if (SelectedStudent.AcademicHistory == null)
+                {
+                    SelectedStudent.AcademicHistory = new ObservableCollection<AcademicHistory>();
+                }
+
+                // Clear the collection and add new items
+                SelectedStudent.AcademicHistory.Clear();
+                foreach (var academic in history)
+                {
+                    SelectedStudent.AcademicHistory.Add(academic);
+                }
+
+                // Notify that the AcademicHistory has been updated
+                OnPropertyChanged(nameof(SelectedStudent.AcademicHistory));
+
+                // Optionally, check count
+                Debug.WriteLine($"AcademicHistory count after update: {SelectedStudent.AcademicHistory.Count}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading academic history: {ex.Message}");
+            }
+        }
+
     }
 }

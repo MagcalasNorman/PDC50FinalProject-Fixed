@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
 using PDC50FinalProject.Model;
+using System.Diagnostics;
 using System.Net.Http.Json;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+using System.Text;
 
 namespace PDC50FinalProject.Services
 {
@@ -20,7 +16,7 @@ namespace PDC50FinalProject.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<List<Student>>GetStudentAsync()
+        public async Task<List<Student>> GetStudentAsync()
         {
             var response =
                 await _httpClient.GetFromJsonAsync<List<Student>>($"{BaseUrl}get_user.php");
@@ -52,23 +48,36 @@ namespace PDC50FinalProject.Services
             return result;
         }
 
-        //public async Task<List<AcademicHistory>> GetAcademicHistoryAsync(int studentId)
-        //{
-        //    var url = $"{BaseUrl}/get_academic_history.php"; // Ensure BaseUrl is defined in your service
-        //    var payload = JsonConvert.SerializeObject(new { studentId });
+        public async Task<List<AcademicHistory>> GetAcademicHistoryAsync(int studentId)
+        {
+            var url = $"{BaseUrl}/get_academic_history.php";
+            var payload = JsonConvert.SerializeObject(new { studentId });
 
-        //    var response = await _httpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json"));
+            var response = await _httpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json"));
 
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var json = await response.Content.ReadAsStringAsync();
-        //        return JsonConvert.DeserializeObject<List<AcademicHistory>>(json) ?? new List<AcademicHistory>();
-        //    }
-        //    else
-        //    {
-        //        throw new Exception("Failed to fetch academic history.");
-        //    }
-        //}
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var history = JsonConvert.DeserializeObject<List<AcademicHistory>>(json);
+
+                // Debugging the response
+                Debug.WriteLine("Received academic history: " + json);
+
+                if (history != null)
+                {
+                    return history;
+                }
+                else
+                {
+                    Debug.WriteLine("No academic history found for the student.");
+                    return new List<AcademicHistory>(); // Return an empty list if no data
+                }
+            }
+            else
+            {
+                throw new Exception("Failed to fetch academic history.");
+            }
+        }
 
     }
 }

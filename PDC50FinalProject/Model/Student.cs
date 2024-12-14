@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,9 @@ namespace PDC50FinalProject.Model
         public string Course { get; set; }
         public string YearLevel { get; set; }
 
-        public List<AcademicHistory> AcademicHistory { get; set; } = new List<AcademicHistory>();
+        public ObservableCollection<AcademicHistory> AcademicHistory { get; set; } = new ObservableCollection<AcademicHistory>();
 
     }
+
+
 }

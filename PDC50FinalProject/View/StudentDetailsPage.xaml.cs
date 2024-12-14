@@ -1,36 +1,60 @@
 using PDC50FinalProject.Model;
 using PDC50FinalProject.ViewModel;
-namespace PDC50FinalProject.View;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
+namespace PDC50FinalProject.View;
 
 public partial class StudentDetailsPage : ContentPage
 {
-	public StudentDetailsPage(Student selectedStudent)
-	{
-		InitializeComponent();
-		BindingContext = selectedStudent;
-	}
+    public StudentDetailsPage(Student selectedStudent)
+    {
+        InitializeComponent();
+
+        // Set the BindingContext to the ViewModel and pass the selected student
+        BindingContext = new StudentViewModel
+        {
+            SelectedStudent = selectedStudent
+        };
+
+        // Load academic history (optional, based on if it's already part of the selected student)
+        LoadAcademicHistory();
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is StudentViewModel viewModel)
+        {
+            // Explicitly await LoadAcademicHistoryAsync to ensure data is loaded before the UI is shown
+            await viewModel.LoadAcademicHistoryAsync();
+
+            // Debug check to ensure data has been loaded
+            Debug.WriteLine($"AcademicHistory count in OnAppearing: {viewModel.SelectedStudent.AcademicHistory.Count}");
+        }
+    }
+
+    private async void LoadAcademicHistory()
+    {
+        try
+        {
+            if (BindingContext is StudentViewModel viewModel)
+            {
+                // Use the ViewModel to load academic history for the selected student
+                await viewModel.LoadAcademicHistoryAsync(); // Call without the student argument
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to load academic history: {ex.Message}");
+        }
+    }
+
     private async void OnGoBackButtonClicked(object sender, EventArgs e)
     {
         await Navigation.PopAsync();
     }
 
-    private async void OnEditButtonClicked(object sender, EventArgs e)
-    {
-        var selectedStudent = BindingContext as Student;
-        if (selectedStudent != null)
-        {
-            
-        }
-    }
-
-    //protected override async void OnAppearing()
-    //{
-    //    base.OnAppearing();
-
-    //    if (BindingContext is StudentViewModel viewModel)
-    //    {
-    //        viewModel.LoadAcademicHistoryCommand.Execute(null);
-    //    }
-    //}
+    
 }

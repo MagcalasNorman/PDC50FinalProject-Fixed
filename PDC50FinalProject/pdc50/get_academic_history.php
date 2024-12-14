@@ -1,33 +1,34 @@
 <?php
 include 'db.php';
 
-header("Content-Type: application/json");
+$data = json_decode(file_get_contents("php://input"), true); // Decode as associative array
 
-$data = json_decode(file_get_contents("php://input"));
-$studentId = $data->studentId;
-
-if (!$studentId) {
-    echo json_encode(["message" => "Student ID is required"]);
-    exit();
+// Check if studentId is passed
+if (!isset($data['studentId'])) {
+    echo json_encode(["message" => "Invalid input data"]);
+    exit;
 }
 
-$sql = "SELECT Course, yearLevel FROM academic_history WHERE StudentID = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $studentId);
+$studentId = $conn->real_escape_string($data['studentId']);
 
-if ($stmt->execute()) {
-    $result = $stmt->get_result();
+// Query the academic_history table
+$sql = "SELECT id, StudentID, Course, yearLevel FROM academic_history WHERE StudentID = '$studentId'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
     $academicHistory = [];
-
     while ($row = $result->fetch_assoc()) {
-        $academicHistory[] = $row;
+        $academicHistory[] = [
+            "ID" => $row['id'],  // Ensure 'id' is used here
+            "StudentID" => $row['StudentID'],
+            "Course" => $row['Course'],
+            "YearLevel" => $row['yearLevel']
+        ];
     }
-
     echo json_encode($academicHistory);
 } else {
-    echo json_encode(["message" => "Error retrieving academic history: " . $conn->error]);
+    echo json_encode([]); // Return empty array if no records
 }
 
-$stmt->close();
 $conn->close();
 ?>
