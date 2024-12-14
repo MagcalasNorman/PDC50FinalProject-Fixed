@@ -354,9 +354,7 @@ namespace PDC50FinalProject.ViewModel
         {
             if (SelectedStudent == null) return;
 
-            try
-            {
-                Debug.WriteLine($"Loading academic history for student ID: {SelectedStudent.ID}");
+           
 
                 var history = await _studentService.GetAcademicHistoryAsync(SelectedStudent.ID);
 
@@ -378,14 +376,6 @@ namespace PDC50FinalProject.ViewModel
 
                 // Notify that the AcademicHistory has been updated
                 OnPropertyChanged(nameof(SelectedStudent.AcademicHistory));
-
-                // Optionally, check count
-                Debug.WriteLine($"AcademicHistory count after update: {SelectedStudent.AcademicHistory.Count}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error loading academic history: {ex.Message}");
-            }
         }
 
     }
